@@ -12,17 +12,18 @@ class Player {
 
 let currentPlayer = 0;
 let cube;
+let tScore = 0;
 let player1Object = new Player();
 let player2Object = new Player();
 
 function holdScore(playerObject, currentScoreElement) {
-  playerObject.totalScore += cube;
+  playerObject.totalScore += tScore;
   document.querySelector(currentScoreElement).textContent =
     playerObject.totalScore;
   document.querySelector('#current--' + currentPlayer).textContent = '0';
   switchPlayers();
 
-  if (playerObject.totalScore >= 20) {
+  if (playerObject.totalScore >= 50) {
     console.log(`Player ${currentPlayer + 1} wins!`);
     document.querySelector('.fixed-h2').textContent = `Player ${
       currentPlayer == 1 ? '1' : '2'
@@ -40,23 +41,27 @@ function switchPlayers() {
       player.classList.add('player--active');
     } else {
       player.classList.remove('player--active');
+      tScore = 0;
     }
   });
 }
 
 document.querySelector('.btn--roll').addEventListener('click', function () {
   cube = Math.trunc(Math.random() * 6) + 1;
+  tScore += cube;
   document.querySelector('.dice').src = `dice-${cube}.png`;
+  document.querySelector('.dice').classList.remove('hidden');
   document.querySelector('.dice').alt = `Playing dice with a value of ${cube}`;
   if (cube === 1) {
     document.querySelector('#current--' + currentPlayer).textContent = '0';
     switchPlayers();
     return;
   }
-  document.querySelector('#current--' + currentPlayer).textContent = cube;
+  document.querySelector('#current--' + currentPlayer).textContent = tScore;
 });
 
 document.querySelector('.btn--hold').addEventListener('click', function () {
+  document.querySelector('.dice').classList.add('hidden');
   if (players[currentPlayer].classList.contains('player--active')) {
     if (currentPlayer === 0) {
       holdScore(player1Object, '#score--0');
